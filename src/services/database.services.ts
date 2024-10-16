@@ -1,5 +1,6 @@
 import { config } from 'dotenv'
-import { Db, MongoClient } from 'mongodb'
+import { Collection, Db, MongoClient } from 'mongodb'
+import UserModel from '~/models/schemas/User.schema'
 config()
 
 const uri = process.env.MONGODB_URL ?? ''
@@ -20,6 +21,10 @@ class DatabaseService {
       console.log('Error', error)
       throw error
     }
+  }
+
+  get users(): Collection<UserModel> {
+    return this.db.collection('users')
   }
 }
 
