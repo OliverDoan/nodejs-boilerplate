@@ -38,6 +38,9 @@ importers:
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
+      '@types/jsonwebtoken':
+        specifier: ^9.0.7
+        version: 9.0.7
       '@types/node':
         specifier: ^22.4.1
         version: 22.4.1
@@ -501,6 +504,10 @@ packages:
   '@types/http-errors@2.0.4':
     resolution:
       { integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA== }
+
+  '@types/jsonwebtoken@9.0.7':
+    resolution:
+      { integrity: sha512-ugo316mmTYBl2g81zDFnZ7cfxlut3o+/EQdaP7J8QN2kY6lJ22hmQYCK5EHcJHbrW+dkCGSCPgbG8JtYj6qSrg== }
 
   '@types/mime@1.3.5':
     resolution:
@@ -2743,6 +2750,10 @@ snapshots:
       '@types/serve-static': 1.15.7
 
   '@types/http-errors@2.0.4': {}
+
+  '@types/jsonwebtoken@9.0.7':
+    dependencies:
+      '@types/node': 22.4.1
 
   '@types/mime@1.3.5': {}
 

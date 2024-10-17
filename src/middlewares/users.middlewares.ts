@@ -29,40 +29,6 @@ const passwordSchema: ParamSchema = {
   }
 }
 
-const confirmPasswordSchema: ParamSchema = {
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
-  },
-  isString: {
-    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_A_STRING
-  },
-  isLength: {
-    options: {
-      min: 6,
-      max: 50
-    },
-    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
-  },
-  isStrongPassword: {
-    options: {
-      minLength: 6,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1
-    },
-    errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_STRONG
-  },
-  custom: {
-    options: (value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
-      }
-      return true
-    }
-  }
-}
-
 const nameSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.NAME_IS_REQUIRED
@@ -114,7 +80,6 @@ export const registerValidator = validate(
         }
       },
       password: passwordSchema,
-      confirm_password: confirmPasswordSchema,
       date_of_birth: dateOfBirthSchema
     },
     ['body']
