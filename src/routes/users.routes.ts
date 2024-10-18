@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { registerController } from '~/controllers/users.controllers'
-import { registerValidator } from '~/middlewares/users.middlewares'
+import { loginController, registerController } from '~/controllers/users.controllers'
+import { loginValidator, registerValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 const usersRouter = Router()
 
@@ -11,5 +11,13 @@ const usersRouter = Router()
  * Body: { name: string, email: string, password: string,  date_of_birth: ISO8601 }
  */
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
+
+/**
+ * Description. Đăng nhập vào hệ thống
+ * Path: /login
+ * Method: POST
+ * Body: { email: string, password: string }
+ */
+usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 export default usersRouter

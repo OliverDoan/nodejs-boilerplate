@@ -20,6 +20,7 @@ class UsersService {
       }
     })
   }
+
   private signRefreshToken({ user_id, verify, exp }: { user_id: string; verify: UserVerifyStatus; exp?: number }) {
     if (exp) {
       return signToken({
@@ -44,6 +45,7 @@ class UsersService {
       }
     })
   }
+
   private signAccessAndRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
   }
@@ -74,6 +76,18 @@ class UsersService {
   async checkEmailExist(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
+  }
+
+  async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
+      user_id,
+      verify
+    })
+
+    return {
+      access_token,
+      refresh_token
+    }
   }
 }
 const usersService = new UsersService()

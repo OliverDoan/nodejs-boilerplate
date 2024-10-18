@@ -12,5 +12,8 @@ export const USERS_MESSAGES = {
   PASSWORD_MUST_BE_STRONG:
     'Password must be 6-50 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
   DATE_OF_BIRTH_MUST_BE_ISO8601: 'Date of birth must be ISO8601',
-  REGISTER_SUCCESS: 'Register success'
+  REGISTER_SUCCESS: 'Register success',
+  LOGIN_SUCCESS: 'Login success',
+  USER_NOT_FOUND: 'User not found',
+  EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect'
 } as const
