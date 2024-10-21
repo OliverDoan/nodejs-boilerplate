@@ -81,12 +81,10 @@ class UsersService {
   }
 
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
-    console.log(verify)
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       verify
     })
-    console.log(access_token)
 
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
