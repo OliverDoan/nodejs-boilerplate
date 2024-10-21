@@ -1,7 +1,9 @@
 import { ObjectId } from 'mongodb'
 import { envConfig } from '~/constants/config'
 import { TokenType, UserVerifyStatus } from '~/constants/enum'
+import { USERS_MESSAGES } from '~/constants/messages'
 import { RegisterRequest } from '~/models/requests/User.requests'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
@@ -79,14 +81,26 @@ class UsersService {
   }
 
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    console.log(verify)
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,
       verify
     })
+    console.log(access_token)
 
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+    )
     return {
       access_token,
       refresh_token
+    }
+  }
+
+  async logout(refresh_token: string) {
+    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    return {
+      message: USERS_MESSAGES.LOGOUT_SUCCESS
     }
   }
 }
