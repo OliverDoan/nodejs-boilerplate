@@ -312,3 +312,13 @@ export const verifyForgotPasswordTokenValidator = validate(
     forgot_password_token: forgotPasswordTokenSchema
   })
 )
+
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      password: passwordSchema,
+      forgot_password_token: forgotPasswordTokenSchema
+    },
+    ['body']
+  )
+)
