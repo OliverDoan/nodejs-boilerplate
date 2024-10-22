@@ -14,6 +14,7 @@ interface IUser {
   password: string
   verify?: UserVerifyStatus
   email_verify_token?: string
+  forgot_password_token?: string
   created_at?: Date
   updated_at?: Date
 }
@@ -26,6 +27,7 @@ export default class User {
   password: string
   verify: UserVerifyStatus
   email_verify_token: string
+  forgot_password_token: string
   created_at: Date
   updated_at: Date
 
@@ -39,6 +41,7 @@ export default class User {
     this.password = user.password
     this.verify = user.verify || UserVerifyStatus.Unverified
     this.email_verify_token = user.email_verify_token || ''
+    this.forgot_password_token = user.forgot_password_token || ''
     this.created_at = user.created_at || date
     this.updated_at = user.updated_at || date
   }
