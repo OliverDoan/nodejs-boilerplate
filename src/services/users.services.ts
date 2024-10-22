@@ -48,17 +48,36 @@ class UsersService {
     })
   }
 
+  private signEmailVerifyToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    return signToken({
+      payload: {
+        user_id,
+        token_type: TokenType.EmailVerifyToken,
+        verify
+      },
+      privateKey: envConfig.jwtSecretEmailVerifyToken as string,
+      options: {
+        expiresIn: envConfig.emailVerifyTokenExpiresIn
+      }
+    })
+  }
+
   private signAccessAndRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
   }
 
   async register(payload: RegisterRequest) {
     const user_id = new ObjectId()
-
+    const email_verify_token = await this.signEmailVerifyToken({
+      user_id: user_id.toString(),
+      verify: UserVerifyStatus.Unverified
+    })
+    console.log('🚀 ~ UsersService ~ register ~ email_verify_token:', email_verify_token)
     await databaseService.users.insertOne(
       new User({
         ...payload,
         _id: user_id,
+        email_verify_token,
         date_of_birth: new Date(payload.date_of_birth),
         password: hashPassword(payload.password)
       })
@@ -119,6 +138,30 @@ class UsersService {
     return {
       access_token: new_access_token,
       refresh_token: new_refresh_token
+    }
+  }
+
+  async verifyEmail(user_id: string) {
+    // Tạo giá trị cập nhật
+    // MongoDB cập nhật giá trị
+    const [token] = await Promise.all([
+      this.signAccessAndRefreshToken({ user_id, verify: UserVerifyStatus.Verified }),
+      databaseService.users.updateOne({ _id: new ObjectId(user_id) }, [
+        {
+          $set: {
+            email_verify_token: '',
+            verify: UserVerifyStatus.Verified,
+            updated_at: '$$NOW'
+          }
+        }
+      ])
+    ])
+
+    const [access_token, refresh_token] = token
+
+    return {
+      access_token,
+      refresh_token
     }
   }
 }
