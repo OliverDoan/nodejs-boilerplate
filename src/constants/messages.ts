@@ -38,5 +38,7 @@ export const USERS_MESSAGES = {
   IMAGE_URL_LENGTH: 'Avatar length must be from 1 to 200',
   NAME_INVALID:
     'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
-  NAME_EXISTED: 'Username existed'
+  NAME_EXISTED: 'Username existed',
+  OLD_PASSWORD_NOT_MATCH: 'Old password not match',
+  CHANGE_PASSWORD_SUCCESS: 'Change password success'
 } as const
