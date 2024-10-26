@@ -1,11 +1,14 @@
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
 import { envConfig } from '~/constants/config'
+import { UserVerifyStatus } from '~/constants/enum'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/messages'
+import { REGEX_NAME } from '~/constants/regex'
 import { ErrorWithStatus } from '~/models/Errors'
+import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import usersService from '~/services/users.services'
 import { hashPassword } from '~/utils/crypto'
@@ -46,7 +49,19 @@ const nameSchema: ParamSchema = {
     errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
   },
   trim: true,
-
+  custom: {
+    options: async (value: string, { req }) => {
+      if (!REGEX_NAME.test(value)) {
+        throw Error(USERS_MESSAGES.NAME_INVALID)
+      }
+      const user = await databaseService.users.findOne({ username: value })
+      // Nếu đã tồn tại username này trong db
+      // thì chúng ta không cho phép update
+      if (user) {
+        throw Error(USERS_MESSAGES.NAME_EXISTED)
+      }
+    }
+  },
   isLength: {
     options: {
       min: 1,
@@ -107,6 +122,21 @@ const forgotPasswordTokenSchema: ParamSchema = {
       }
       return true
     }
+  }
+}
+
+const imageSchema: ParamSchema = {
+  optional: true,
+  isString: {
+    errorMessage: USERS_MESSAGES.IMAGE_URL_MUST_BE_STRING
+  },
+  trim: true,
+  isLength: {
+    options: {
+      min: 1,
+      max: 400
+    },
+    errorMessage: USERS_MESSAGES.IMAGE_URL_LENGTH
   }
 }
 
@@ -174,6 +204,7 @@ export const accessTokenValidator = validate(
         custom: {
           options: async (value: string, { req }) => {
             const access_token = (value || '').split(' ')[1]
+            console.log('🚀 ~ options: ~ access_token:', access_token)
             if (!access_token) {
               throw new ErrorWithStatus({
                 message: USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
@@ -185,6 +216,7 @@ export const accessTokenValidator = validate(
                 token: access_token,
                 secretOrPublicKey: envConfig.jwtSecretAccessToken as string
               })
+              console.log('🚀 ~ options: ~ decoded_authorization:', decoded_authorization)
               ;(req as Request).decoded_authorization = decoded_authorization
             } catch (error) {
               throw new ErrorWithStatus({
@@ -318,6 +350,38 @@ export const resetPasswordValidator = validate(
     {
       password: passwordSchema,
       forgot_password_token: forgotPasswordTokenSchema
+    },
+    ['body']
+  )
+)
+
+export const verifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { verify } = req.decoded_authorization as TokenPayload
+  if (verify !== UserVerifyStatus.Verified) {
+    return next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGES.USER_NOT_VERIFIED,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}
+
+export const updateMeValidator = validate(
+  checkSchema(
+    {
+      name: {
+        ...nameSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      date_of_birth: {
+        ...dateOfBirthSchema,
+        optional: true
+      },
+      avatar: imageSchema,
+      cover_photo: imageSchema
     },
     ['body']
   )

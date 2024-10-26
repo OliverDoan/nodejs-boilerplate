@@ -13,3 +13,10 @@ export interface TokenPayload extends JwtPayload {
   token_type: TokenType
   verify: UserVerifyStatus
 }
+
+export interface UpdateMeReqBody {
+  name?: string
+  date_of_birth?: string
+  avatar?: string
+  cover_photo?: string
+}

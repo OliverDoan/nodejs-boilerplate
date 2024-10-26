@@ -31,5 +31,12 @@ export const USERS_MESSAGES = {
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password success',
   INVALID_FORGOT_PASSWORD_TOKEN: 'Invalid forgot password token',
   RESET_PASSWORD_SUCCESS: 'Reset password success',
-  GET_ME_SUCCESS: 'Get my profile success'
+  GET_ME_SUCCESS: 'Get my profile success',
+  USER_NOT_VERIFIED: 'User not verified',
+  UPDATE_ME_SUCCESS: 'Update my profile success',
+  IMAGE_URL_MUST_BE_STRING: 'Avatar must be a string',
+  IMAGE_URL_LENGTH: 'Avatar length must be from 1 to 200',
+  NAME_INVALID:
+    'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
+  NAME_EXISTED: 'Username existed'
 } as const
