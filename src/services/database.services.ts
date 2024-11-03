@@ -1,6 +1,7 @@
 import { config } from 'dotenv'
 import { Collection, Db, MongoClient } from 'mongodb'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Tweet from '~/models/schemas/Tweet.schema'
 import UserModel from '~/models/schemas/User.schema'
 config()
 
@@ -30,6 +31,10 @@ class DatabaseService {
 
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection('refresh_tokens')
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection('tweets')
   }
 }
 
