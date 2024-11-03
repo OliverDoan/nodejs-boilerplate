@@ -5,6 +5,7 @@ import {
   getMeController,
   loginController,
   logoutController,
+  oauthController,
   refreshTokenController,
   registerController,
   resendVerifyEmailController,
@@ -45,6 +46,14 @@ usersRouter.post('/register', registerValidator, wrapRequestHandler(registerCont
  * Body: { email: string, password: string }
  */
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+
+/**
+ * Description. OAuth with Google
+ * Path: /oauth/google
+ * Method: GET
+ * Query: { code: string }
+ */
+usersRouter.get('/oauth/google', wrapRequestHandler(oauthController))
 
 /**
  * Description. Đăng xuất ra hệ thống

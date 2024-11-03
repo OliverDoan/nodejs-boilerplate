@@ -13,5 +13,9 @@ export const envConfig = {
   jwtSecretEmailVerifyToken: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
   emailVerifyTokenExpiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN as string,
   jwtSecretForgotPasswordToken: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
-  forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string
+  forgotPasswordTokenExpiresIn: process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string,
+  googleClientId: process.env.GOOGLE_CLIENT_ID as string,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+  googleRedirectUri: process.env.GOOGLE_REDIRECT_URI as string,
+  clientRedirectCallback: process.env.CLIENT_REDIRECT_CALLBACK as string
 }

@@ -1,5 +1,6 @@
 import { config } from 'dotenv'
 import { Collection, Db, MongoClient } from 'mongodb'
+import { envConfig } from '~/constants/config'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import UserModel from '~/models/schemas/User.schema'
 config()
@@ -11,7 +12,7 @@ class DatabaseService {
   private db: Db
   constructor() {
     this.client = new MongoClient(uri)
-    this.db = this.client.db(process.env.DB_NAME)
+    this.db = this.client.db(envConfig.dbName)
   }
 
   async connect() {
