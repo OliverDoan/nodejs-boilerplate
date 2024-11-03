@@ -1,5 +1,8 @@
 import { config } from 'dotenv'
 config()
+import argv from 'minimist'
+const options = argv(process.argv.slice(2))
+export const isProduction = Boolean(options.production)
 
 export const envConfig = {
   port: (process.env.PORT as string) || 4000,
