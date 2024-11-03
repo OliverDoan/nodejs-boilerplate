@@ -6,6 +6,7 @@ import databaseService from './services/database.services'
 import { envConfig } from './constants/config'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
+import { UPLOAD_DIR } from './constants/dir'
 config()
 databaseService.connect()
 
@@ -17,6 +18,7 @@ initFolder()
 
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
+app.use('/static', express.static(UPLOAD_DIR))
 
 app.use(defaultErrorHandler)
 
