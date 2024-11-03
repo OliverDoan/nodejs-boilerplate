@@ -7,6 +7,7 @@ import staticRouter from './routes/static.routes'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
 import { initFolder } from './utils/file'
+import tweetsRouter from './routes/tweets.routes'
 config()
 databaseService.connect()
 
@@ -18,6 +19,7 @@ initFolder()
 
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
+app.use('/tweets', tweetsRouter)
 // Cách 1
 // app.use('/static', express.static(UPLOAD_DIR))
 
