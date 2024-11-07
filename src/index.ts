@@ -4,18 +4,34 @@ import { envConfig } from './constants/config'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
 import staticRouter from './routes/static.routes'
+import tweetsRouter from './routes/tweets.routes'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
 import { initFolder } from './utils/file'
-import tweetsRouter from './routes/tweets.routes'
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+
+const options: swaggerJsdoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'X clone (Twitter API)',
+      version: '1.0.0'
+    }
+  },
+  apis: ['./openapi/*.yaml', './openapi/**/*.yaml'] // files containing annotations as above
+}
+const openapiSpecification = swaggerJsdoc(options)
 config()
+initFolder()
+
 databaseService.connect()
 
-const app = express()
-app.use(express.json())
 const port = envConfig.port || 3000
+const app = express()
 
-initFolder()
+app.use(express.json())
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
