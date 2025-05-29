@@ -16,8 +16,7 @@
   "lint-staged": {
     "*.{js,css,ts,tsx,jsx}": [
       "pnpm prettier:fix",
-      "pnpm lint:fix",
-      "git add ."
+      "pnpm lint:fix"
     ]
   },
   "keywords": [],
