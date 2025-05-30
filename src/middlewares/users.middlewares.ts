@@ -1,5 +1,6 @@
 import { checkSchema, ParamSchema } from 'express-validator'
 import databaseService from '~/services/database.services'
+import usersService from '~/services/users.services'
 import { validate } from '~/utils/validate'
 
 const passwordSchema: ParamSchema = {
@@ -64,7 +65,16 @@ export const registerValidator = validate(
         isEmail: {
           errorMessage: 'Email is invalid'
         },
-        trim: true
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const isExistEmail = await usersService.checkEmailExist(value)
+            if (isExistEmail) {
+              throw new Error('Email already exists')
+            }
+            return true
+          }
+        }
       },
       password: passwordSchema
     },
