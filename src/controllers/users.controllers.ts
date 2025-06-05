@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
+import { USERS_MESSAGES } from '~/constants/message'
 import usersService from '~/services/users.services'
 
 export const loginController = (req: Request, res: Response) => {
   const { email, password } = req.body
   if (email === 'duthanhduoc@gmail.com' && password === '123456') {
     return res.status(200).json({
-      message: 'Login success'
+      message: USERS_MESSAGES.LOGIN_SUCCESS
     })
   }
   return res.status(400).json({
@@ -17,7 +18,7 @@ export const registerController = async (req: Request, res: Response, next: Next
   const { email, password } = req.body
   const result = await usersService.register({ email, password })
   return res.json({
-    message: 'Register success',
+    message: USERS_MESSAGES.REGISTER_SUCCESS,
     result
   })
 }

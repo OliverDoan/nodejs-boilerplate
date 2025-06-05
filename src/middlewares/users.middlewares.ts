@@ -1,21 +1,22 @@
 import { checkSchema, ParamSchema } from 'express-validator'
+import { USERS_MESSAGES } from '~/constants/message'
 import databaseService from '~/services/database.services'
 import usersService from '~/services/users.services'
 import { validate } from '~/utils/validate'
 
 const passwordSchema: ParamSchema = {
   notEmpty: {
-    errorMessage: 'Password is required'
+    errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
   },
   isString: {
-    errorMessage: 'Password must be a string'
+    errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_A_STRING
   },
   isLength: {
     options: {
       min: 6,
       max: 50
     },
-    errorMessage: 'Password length must be from 6 to 50'
+    errorMessage: USERS_MESSAGES.PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
   },
   isStrongPassword: {
     options: {
@@ -25,8 +26,7 @@ const passwordSchema: ParamSchema = {
       minNumbers: 1,
       minSymbols: 1
     },
-    errorMessage:
-      'Password must be 6-50 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol'
+    errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_STRONG
   }
 }
 
@@ -34,7 +34,7 @@ export const loginValidator = validate(
   checkSchema({
     email: {
       isEmail: {
-        errorMessage: 'Email is invalid'
+        errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
       },
       trim: true,
       custom: {
@@ -44,7 +44,7 @@ export const loginValidator = validate(
             password: req.body.password
           })
           if (user === null) {
-            throw new Error('Email or password is incorrect')
+            throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
           }
           req.user = user
           return true
@@ -60,17 +60,17 @@ export const registerValidator = validate(
     {
       email: {
         notEmpty: {
-          errorMessage: 'Email is required'
+          errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
         },
         isEmail: {
-          errorMessage: 'Email is invalid'
+          errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
         },
         trim: true,
         custom: {
           options: async (value) => {
             const isExistEmail = await usersService.checkEmailExist(value)
             if (isExistEmail) {
-              throw new Error('Email already exists')
+              throw new Error(USERS_MESSAGES.EMAIL_ALREADY_EXISTS)
             }
             return true
           }
